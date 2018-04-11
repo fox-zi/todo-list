@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import {ListView, Text, StyleSheet,TouchableOpacity } from 'react-native'
+import {ListView, Text, StyleSheet,TouchableOpacity, AlertIOS } from 'react-native'
+import TodoDetail from './todoDetail'
 
 export default class ListTodo extends Component {
   constructor(props){
@@ -15,12 +16,27 @@ export default class ListTodo extends Component {
         <ListView
           style = { styles.container }
           dataSource = { this.state.dataSource }
-          renderRow= { (data) => <TouchableOpacity><Text>{ data }</Text></TouchableOpacity> }
+          renderRow= { this.renderRow.bind(dataSource) }
         />
       )
     }
-}
 
+  pressCell(dataRow){
+    this.props.navigator.push({
+      component: TodoDetail,
+      passProps: { dataRow },
+      title: 'Todo Detail',
+    })
+  }
+
+  renderRow(dataRow){
+    return (
+      <TouchableOpacity onPress={ ()=> this.props.pressCell(dataRow) }>
+        <Text>{ dataRow }</Text>
+      </TouchableOpacity>
+    )
+  }
+}
 const styles = StyleSheet.create({
   container: {
     flex: 1,

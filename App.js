@@ -1,11 +1,16 @@
 import React, { Component } from 'react';
-import { View } from 'react-native';
+import { View, NavigatorIOS } from 'react-native';
 import ListTodo from './compoments/listtodo'
-// type Props = {};
 export default class App extends Component {
   render() {
     return (
-      <ListTodo />
+      <NavigatorIOS
+       initialRoute={{
+         component: ListTodo,
+         title: 'My todo',
+       }}
+       style={{flex: 1}}
+     />
     );
   }
 }
