@@ -9,10 +9,11 @@ export default class ListTodo extends Component {
     this.state = {
       dataSource: ds.cloneWithRows(mang)
     };
-    _this = this;
+
   }
 
   componentDidMount(){
+    _this = this;
     this.state = {
       dataSource: this.state.dataSource
     };
