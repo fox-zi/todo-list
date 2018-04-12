@@ -1,25 +1,34 @@
 import React, { Component } from 'react'
 import {ListView, Text, StyleSheet,TouchableOpacity, AlertIOS } from 'react-native'
 import TodoDetail from './todoDetail'
-
 export default class ListTodo extends Component {
   constructor(props){
     super(props);
-    var mang = ['1111','22222','33333','1111','22222','33333']
-    dataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 != r2 });
+    var mang = ['1111','22222','33333','1111','22222','33333'];
+    var ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 != r2 });
     this.state = {
-      dataSource: dataSource.cloneWithRows(mang),
+      dataSource: ds.cloneWithRows(mang)
+    };
+    _this = this;
+  }
+
+  componentDidMount(){
+    this.state = {
+      dataSource: this.state.dataSource
     };
   }
+
   render() {
+
       return(
         <ListView
+          enableEmptySections = { true }
           style = { styles.container }
           dataSource = { this.state.dataSource }
-          renderRow= { this.renderRow.bind(dataSource) }
+          renderRow= { this.renderRow }
         />
       )
-    }
+  }
 
   pressCell(dataRow){
     this.props.navigator.push({
@@ -31,7 +40,7 @@ export default class ListTodo extends Component {
 
   renderRow(dataRow){
     return (
-      <TouchableOpacity onPress={ ()=> this.props.pressCell(dataRow) }>
+      <TouchableOpacity onPress={ () => {_this.pressCell(dataRow)} }>
         <Text>{ dataRow }</Text>
       </TouchableOpacity>
     )
