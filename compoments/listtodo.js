@@ -32,9 +32,8 @@ export default class ListTodo extends Component {
 
   pressCell(dataRow){
     this.props.navigator.push({
-      component: TodoDetail,
-      passProps: { dataRow },
-      title: 'Todo Detail',
+      ident: 'Todo Detail',
+      dataRow
     })
   }
 

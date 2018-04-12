@@ -1,11 +1,16 @@
 import React, { Component } from 'react'
-import {View, Text, StyleSheet } from 'react-native'
+import {View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 
 export default class TodoDetail extends Component {
+  goback(){
+    this.props.navigator.pop()
+  }
   render() {
       return(
         <View   style = { styles.container }>
-          <Text>{this.props.dataRow}</Text>
+          <TouchableOpacity onRess={ () => _this.goBack()}
+          <Text>{this.props.data}</Text>
+          />
         </View>
       )
     }
