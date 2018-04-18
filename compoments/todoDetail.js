@@ -4,7 +4,7 @@ import {View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 export default class TodoDetail extends Component {
   render() {
       return(
-        <View  style = { styles.container }>
+        <View  style = { styles.container } >
             <Text>{this.props.dataRow}</Text>
             <TouchableOpacity onPress={() => { this.props.navigator.pop() } }>
             <Text>Back</Text>
