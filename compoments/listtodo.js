@@ -1,14 +1,15 @@
 import React, { Component } from 'react'
-import {ListView, Text, StyleSheet,TouchableOpacity, AlertIOS,View, TextInput } from 'react-native'
+import {ListView, Text, StyleSheet,
+  TouchableOpacity, AlertIOS,View,
+  AsyncStorage, TextInput } from 'react-native'
 import TodoDetail from './todoDetail'
 export default class ListTodo extends Component {
   constructor(props){
     super(props);
-    var mang = ['Dummy Item 1','Dummy Item 2','Dummy Item 3','Dummy Item 4',
-                'Dummy Item 5','Dummy Item 6'];
+    var mang = []
     var ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 != r2 });
     this.state = {
-      text: '',
+      text: 'Foxzi',
       mang: mang,
       dataSource: ds.cloneWithRows(mang)
     };
@@ -16,11 +17,34 @@ export default class ListTodo extends Component {
 
   componentDidMount(){
     _this = this;
-    this.state = {
-      text: '',
-      dataSource: this.state.mang
-    };
+    this.get()
   }
+
+  save = async()=>{
+    try {
+      await AsyncStorage.setItem('@Array:key', JSON.stringify(this.state.mang));
+      console.log(JSON.stringify(this.state.mang));
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  get = async()=>{
+    try {
+      var mang = await AsyncStorage.getItem('@Array:key');
+      mang = JSON.parse(mang);
+
+      this.setState({
+        mang: mang,
+        dataSource: this.state.dataSource.cloneWithRows(mang)
+      })
+    } catch (e) {
+      console.log('==============Lôi');
+    }
+  }
+
+
 
   render() {
     return(
@@ -29,28 +53,22 @@ export default class ListTodo extends Component {
           style = { styles.container }
           dataSource = { this.state.dataSource }
           renderRow= { this.renderRow }
-          renderHeader = { this.renderAdd }
+          renderHeader = { this.renderAdd.bind(this) }
         />
     )
   }
 
-  pressCell(dataRow){
-    this.props.navigator.push({
-      component: TodoDetail,
-      passProps: { dataRow },
-      title: 'Todo Detail',
-    })
-  }
 
-  renderAdd(){
+  renderAdd() {
     return (
-      <View style={styles1.container}>
+      <View style={ styles1.container }>
         <TextInput
-          style={styles1.input}
+          value = { this.state.text }
+          style={ styles1.input }
           placeholder="Search..."
-          onChangeText={ (text) => _this.setState({ text: text }) }
+          onChangeText={ (text) => this.setState({ text: text }) }
         />
-        <TouchableOpacity onPress={ () => { _this.addCell()}}>
+        <TouchableOpacity onPress={ () => { this.addCell() }}>
           <Text> ADD </Text>
         </TouchableOpacity>
       </View>
@@ -58,16 +76,25 @@ export default class ListTodo extends Component {
   }
 
   addCell() {
-    // if (this.state.text) {
+    console.log(this.state.text);
+    if (this.state.text) {
+      array = this.state.mang;
+      array.push(this.state.text)
       this.setState({
-        mang: this.state.mang.push(this.state.text),
+        mang: array,
         text: '',
-        dataSource: this.state.dataSource.cloneWithRows(this.state.mang)
+        dataSource: this.state.dataSource.cloneWithRows(array)
       });
-    // }
-    // else {
-    //   alert('Nhập nội dung')
-    // }
+    this.save()
+  }
+}
+
+  pressCell(dataRow){
+    this.props.navigator.push({
+      component: TodoDetail,
+      passProps: { dataRow },
+      title: 'Todo Detail',
+    })
   }
 
   deleteCell(dataRow){
