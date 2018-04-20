@@ -14,7 +14,6 @@ export default class ListTodo extends Component {
       dataSource: ds.cloneWithRows(mang)
     };
   }
-
   componentDidMount(){
     _this = this;
     this.get()
@@ -34,7 +33,6 @@ export default class ListTodo extends Component {
     try {
       var mang = await AsyncStorage.getItem('@Array:key');
       mang = JSON.parse(mang);
-
       this.setState({
         mang: mang,
         dataSource: this.state.dataSource.cloneWithRows(mang)
@@ -43,9 +41,6 @@ export default class ListTodo extends Component {
       console.log('==============Lôi');
     }
   }
-
-
-
   render() {
     return(
         <ListView
@@ -57,7 +52,6 @@ export default class ListTodo extends Component {
         />
     )
   }
-
 
   renderAdd() {
     return (
@@ -79,7 +73,10 @@ export default class ListTodo extends Component {
     console.log(this.state.text);
     if (this.state.text) {
       array = this.state.mang;
-      array.push(this.state.text)
+      arr = [];
+      arr.push(this.state.text);
+      arr.push('false')
+      array.push(arr)
       this.setState({
         mang: array,
         text: '',
@@ -105,15 +102,16 @@ export default class ListTodo extends Component {
         mang: array,
         dataSource: this.state.dataSource.cloneWithRows(this.state.mang)
       })
+      this.save()
   }
 
   renderRow(dataRow){
     return (
-      <View style={ styles.dataRow }>
+      <View style={ styles.dataRow } >
         <TouchableOpacity onPress={ () => {_this.pressCell(dataRow)} }>
-          <Text>{ dataRow }</Text>
+          <Text>{ dataRow[0] }</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={ () => {_this.deleteCell(dataRow)} } style = { styles.close }>
+        <TouchableOpacity onPress={ () => {_this.deleteCell(dataRow[0])} } style = { styles.close }>
           <Text>X</Text>
         </TouchableOpacity>
       </View>
