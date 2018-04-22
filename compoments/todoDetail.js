@@ -29,8 +29,8 @@ export default class TodoDetail extends Component {
             </TouchableOpacity>
             <CheckBox
               label='Check Done'
-              checked={this.state.check}
-              onChange={(checked) => this.changeChecked(checked) }
+              checked={ this.state.check }
+              onChange={(checked) => this.changeChecked(checked, this.props.dataRow) }
             />
         </View>
       )
@@ -39,7 +39,6 @@ export default class TodoDetail extends Component {
     save = async()=>{
       try {
         await AsyncStorage.setItem('@Array:key', JSON.stringify(this.state.mang));
-        console.log('SAVE!!!!!!!');
       } catch (e) {
         console.log(e);
       }
@@ -55,32 +54,17 @@ export default class TodoDetail extends Component {
       }
     }
 
-    changeChecked(dataRow){
-      // console.log(dataRow[1]);
-      // console.log(this.state.check);
-      // if (dataRow[1] == 'true')
-      //   this.setState({ check: false})
-      // else{
-      //   this.setState({ check: true});
-      // }
-      // console.log(this.state.check);
-      this.setState({ check: dataRow});
+    changeChecked(checked,dataRow){
       array = this.state.mang;
-      arr = [this.props.dataRow[0], dataRow];
+      arr = [dataRow[0], checked];
       for (let i=0; i<array.length; i++) {
         if (JSON.stringify(array[i]) == JSON.stringify(dataRow)) {
           array[i] = arr;
-
         }
       }
-      this.setState({ mang: array});
-      console.log(this.state.mang);
+      this.setState({ mang: array });
+      console.log(array);
       this.save()
-    }
-
-    checkDone(){
-      console.log(this.props.save());
-      this.props.navigator.pop()
     }
 
     todoEdit(){

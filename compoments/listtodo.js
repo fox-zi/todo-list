@@ -22,7 +22,6 @@ export default class ListTodo extends Component {
   save = async()=>{
     try {
       await AsyncStorage.setItem('@Array:key', JSON.stringify(this.state.mang));
-      console.log(JSON.stringify(this.state.mang));
 
     } catch (e) {
       console.log(e);
@@ -96,13 +95,17 @@ export default class ListTodo extends Component {
 
   deleteCell(dataRow){
       array = this.state.mang;
-      index = array.indexOf(dataRow);
-      array.splice(index, 1);
+      for (let i=0; i<array.length; i++) {
+        if (JSON.stringify(array[i]) == JSON.stringify(dataRow)) {
+          array.splice(i,1)
+        }
+      }
       this.setState({
         mang: array,
         dataSource: this.state.dataSource.cloneWithRows(this.state.mang)
       })
       this.save()
+      this.get()
   }
 
   renderRow(dataRow){
@@ -111,7 +114,7 @@ export default class ListTodo extends Component {
         <TouchableOpacity onPress={ () => {_this.pressCell(dataRow)} }>
           <Text>{ dataRow[0] }</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={ () => {_this.deleteCell(dataRow[0])} } style = { styles.close }>
+        <TouchableOpacity onPress={ () => {_this.deleteCell(dataRow)} } style = { styles.close }>
           <Text>X</Text>
         </TouchableOpacity>
       </View>
