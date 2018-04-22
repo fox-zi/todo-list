@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import {View, Text, StyleSheet, TouchableOpacity, AsyncStorage } from 'react-native'
 import CheckBox from 'react-native-checkbox';
-
 export default class TodoDetail extends Component {
   constructor(props){
     super(props);
@@ -10,8 +9,8 @@ export default class TodoDetail extends Component {
       mang: []
     };
   }
-
   componentDidMount(){
+    _this = this
     this.get()
     this.setState({
       check: this.props.dataRow[1]
@@ -21,7 +20,7 @@ export default class TodoDetail extends Component {
       return(
         <View  style = { styles.container } >
             <Text>{this.props.dataRow[0]}</Text>
-            <TouchableOpacity onPress={() => { this.todoEdit() } }>
+            <TouchableOpacity onPress={() => { this.todoEdit(this.props.dataRow) } }>
             <Text>Edit</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => { this.back() } }>
@@ -65,15 +64,6 @@ export default class TodoDetail extends Component {
       this.setState({ mang: array });
       console.log(array);
       this.save()
-    }
-
-    todoEdit(){
-      console.log(this.state.mang);
-      this.props.navigator.pop()
-    }
-
-    editTodo(){
-      this.props.navigator.pop()
     }
 }
 const styles = StyleSheet.create({

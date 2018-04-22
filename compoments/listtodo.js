@@ -3,6 +3,7 @@ import {ListView, Text, StyleSheet,
   TouchableOpacity, AlertIOS,View,
   AsyncStorage, TextInput } from 'react-native'
 import TodoDetail from './todoDetail'
+import TodoEdit from './todoedit'
 export default class ListTodo extends Component {
   constructor(props){
     super(props);
@@ -93,6 +94,14 @@ export default class ListTodo extends Component {
     })
   }
 
+  todoEdit(dataRow){
+    this.props.navigator.push({
+      component: TodoEdit,
+      passProps: { dataRow },
+      title: 'Todo Edit',
+    })
+  }
+
   deleteCell(dataRow){
       array = this.state.mang;
       for (let i=0; i<array.length; i++) {
@@ -113,6 +122,9 @@ export default class ListTodo extends Component {
       <View style={ styles.dataRow } >
         <TouchableOpacity onPress={ () => {_this.pressCell(dataRow)} }>
           <Text>{ dataRow[0] }</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={ () => {_this.todoEdit(dataRow)} }>
+          <Text>->Edit</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={ () => {_this.deleteCell(dataRow)} } style = { styles.close }>
           <Text>X</Text>
