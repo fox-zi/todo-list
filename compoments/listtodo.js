@@ -47,7 +47,7 @@ export default class ListTodo extends Component {
           enableEmptySections = { true }
           style = { styles.container }
           dataSource = { this.state.dataSource }
-          renderRow= { this.renderRow }
+          renderRow= { this.renderRow.bind(this) }
           renderHeader = { this.renderAdd.bind(this) }
         />
     )
@@ -70,7 +70,6 @@ export default class ListTodo extends Component {
   }
 
   addCell() {
-    console.log(this.state.text);
     if (this.state.text) {
       array = this.state.mang;
       arr = [];
@@ -86,29 +85,25 @@ export default class ListTodo extends Component {
   }
 }
 
-  pressCell(dataRow){
+  pressCell(dataRow, index){
     this.props.navigator.push({
       component: TodoDetail,
-      passProps: { dataRow },
+      passProps: { dataRow, index },
       title: 'Todo Detail',
     })
   }
 
-  todoEdit(dataRow){
+  todoEdit(dataRow,index){
     this.props.navigator.push({
       component: TodoEdit,
-      passProps: { dataRow },
+      passProps: { dataRow,index },
       title: 'Todo Edit',
     })
   }
 
-  deleteCell(dataRow){
+  deleteCell(index){
       array = this.state.mang;
-      for (let i=0; i<array.length; i++) {
-        if (JSON.stringify(array[i]) == JSON.stringify(dataRow)) {
-          array.splice(i,1)
-        }
-      }
+      array.splice(index,1)
       this.setState({
         mang: array,
         dataSource: this.state.dataSource.cloneWithRows(this.state.mang)
@@ -117,16 +112,16 @@ export default class ListTodo extends Component {
       this.get()
   }
 
-  renderRow(dataRow){
+  renderRow = (dataRow, sectionID, rowID) => {
     return (
       <View style={ styles.dataRow } >
-        <TouchableOpacity onPress={ () => {_this.pressCell(dataRow)} }>
+        <TouchableOpacity onPress={ () => {_this.pressCell(dataRow, rowID)} }>
           <Text>{ dataRow[0] }</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={ () => {_this.todoEdit(dataRow)} }>
+        <TouchableOpacity onPress={ () => {_this.todoEdit(dataRow, rowID)} }>
           <Text>->Edit</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={ () => {_this.deleteCell(dataRow)} } style = { styles.close }>
+        <TouchableOpacity onPress={ () => {_this.deleteCell(rowID)} } style = { styles.close }>
           <Text>X</Text>
         </TouchableOpacity>
       </View>

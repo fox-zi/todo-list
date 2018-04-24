@@ -10,27 +10,21 @@ export default class TodoDetail extends Component {
     };
   }
   componentDidMount(){
-    _this = this
     this.get()
-    this.setState({
-      check: this.props.dataRow[1]
-    })
+    this.setState({ check: this.props.dataRow[1] })
   }
   render() {
       return(
         <View  style = { styles.container } >
-            <Text>{this.props.dataRow[0]}</Text>
-            <TouchableOpacity onPress={() => { this.todoEdit(this.props.dataRow) } }>
-            <Text>Edit</Text>
-            </TouchableOpacity>
+            <Text>{ this.props.dataRow[0] }</Text>
+            <CheckBox
+              label='Check Done'
+              checked={ this.state.check=='true' }
+              onChange={ (checked) => { this.changeChecked(this.props.dataRow) } }
+            />
             <TouchableOpacity onPress={() => { this.back() } }>
             <Text>Go back</Text>
             </TouchableOpacity>
-            <CheckBox
-              label='Check Done'
-              checked={ this.state.check }
-              onChange={(checked) => this.changeChecked(checked, this.props.dataRow) }
-            />
         </View>
       )
     }
@@ -38,6 +32,7 @@ export default class TodoDetail extends Component {
     save = async()=>{
       try {
         await AsyncStorage.setItem('@Array:key', JSON.stringify(this.state.mang));
+        console.log('SAVE');
       } catch (e) {
         console.log(e);
       }
@@ -49,20 +44,21 @@ export default class TodoDetail extends Component {
         mang = JSON.parse(mang);
         this.setState({ mang: mang })
       } catch (e) {
-        console.log('==============Lôi');
+        console.log(e);
       }
     }
 
-    changeChecked(checked,dataRow){
-      array = this.state.mang;
-      arr = [dataRow[0], checked];
-      for (let i=0; i<array.length; i++) {
-        if (JSON.stringify(array[i]) == JSON.stringify(dataRow)) {
-          array[i] = arr;
-        }
+    changeChecked(dataRow){
+      var current = ''
+      if (this.state.check=='true'){
+        current = 'false'
       }
-      this.setState({ mang: array });
-      console.log(array);
+      else {
+          current = 'true'
+      }
+      array = this.state.mang
+      array[this.props.index] = [dataRow[0], current];
+      this.setState({ mang: array, check: current });
       this.save()
     }
 }

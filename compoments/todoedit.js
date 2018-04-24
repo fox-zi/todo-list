@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {View, TextInput, StyleSheet, TouchableOpacity, Text } from 'react-native'
+import {View, TextInput, StyleSheet, TouchableOpacity, Text, AsyncStorage } from 'react-native'
 import CheckBox from 'react-native-checkbox';
 export default class TodoEdit extends Component {
   constructor(props){
@@ -9,7 +9,10 @@ export default class TodoEdit extends Component {
       mang: []
     };
   }
-
+  componentDidMount(){
+    _this = this;
+    this.get()
+  }
   render() {
       return(
         <View style={ styles1.container }>
@@ -19,37 +22,37 @@ export default class TodoEdit extends Component {
             onChangeText={ (text) => this.setState({ text: text }) }
           />
           <TouchableOpacity onPress={ () => { this.todoEdit() }}>
-            <Text> ADD </Text>
+            <Text> Save </Text>
           </TouchableOpacity>
         </View>
       )
     }
-    todoEdit(){
-      console.log(this.state.text);
-      mang = [];
-      async()=>{
-        try {
-          var mang = await AsyncStorage.getItem('@Array:key');
-          mang = JSON.parse(mang);
-        } catch (e) {
-          console.log('==============Lôi');
-        }
+    get = async()=>{
+      try {
+        var mang = await AsyncStorage.getItem('@Array:key');
+        mang = JSON.parse(mang);
+        this.setState({
+          mang: mang
+        })
+      } catch (e) {
+        console.log(e);
       }
-      console.log(this.props.dataRow);
-      console.log(mang);
-      for (let i=0; i<mang.length; i++) {
-        if (JSON.stringify(mang[i]) == JSON.stringify(this.props.dataRow)) {
-          mang[i] = [this.state.text, this.props.dataRow[1]];
-        }
-      }
+    }
 
-      async()=>{
+    save = async()=>{
         try {
-          await AsyncStorage.setItem('@Array:key', JSON.stringify(mang));
+          await AsyncStorage.setItem('@Array:key', JSON.stringify(this.state.mang));
+          console.log('SAVE');
         } catch (e) {
           console.log(e);
         }
       }
+    todoEdit(){
+      var mang = this.state.mang
+      mang[this.props.index] = [this.state.text, this.props.dataRow[1]]
+      this.setState({ mang: mang })
+      this.save()
+      this.props.navigator.pop();
     }
 }
 const styles1 = StyleSheet.create({
