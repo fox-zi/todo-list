@@ -45,7 +45,6 @@ export default class ListTodo extends Component {
     return(
         <ListView
           enableEmptySections = { true }
-          style = { styles.container }
           dataSource = { this.state.dataSource }
           renderRow= { this.renderRow.bind(this) }
           renderHeader = { this.renderAdd.bind(this) }
@@ -55,10 +54,10 @@ export default class ListTodo extends Component {
 
   renderAdd() {
     return (
-      <View style={ styles1.container }>
+      <View style={ styles.container }>
         <TextInput
           value = { this.state.text }
-          style={ styles1.input }
+          style={ styles.input }
           placeholder="Search..."
           onChangeText={ (text) => this.setState({ text: text }) }
         />
@@ -131,6 +130,9 @@ export default class ListTodo extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    padding: 8,
+    flexDirection: 'row',
+    backgroundColor: '#C1C1C1',
   },
   dataRow: {
     flex: 1/2,
@@ -139,16 +141,6 @@ const styles = StyleSheet.create({
   close: {
     flex: 1/2,
     alignItems: 'center',
-  }
-});
-
-const styles1 = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 8,
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#C1C1C1',
   },
   input: {
     height: 30,
@@ -157,5 +149,5 @@ const styles1 = StyleSheet.create({
     fontSize: 15,
     backgroundColor: '#FFFFFF',
     borderRadius: 2,
-  },
+  }
 });
