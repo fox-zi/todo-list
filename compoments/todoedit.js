@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import {View, TextInput, StyleSheet, TouchableOpacity, Text, AsyncStorage } from 'react-native'
-import CheckBox from 'react-native-checkbox';
+import ListTodo from './listtodo'
 export default class TodoEdit extends Component {
   constructor(props){
     super(props);
@@ -52,7 +52,10 @@ export default class TodoEdit extends Component {
       mang[this.props.index] = [this.state.text, this.props.dataRow[1]]
       this.setState({ mang: mang })
       this.save()
-      this.props.navigator.pop();
+      this.props.navigator.push({
+        component: ListTodo,
+        title: 'My todo',
+      })
     }
 }
 const styles1 = StyleSheet.create({

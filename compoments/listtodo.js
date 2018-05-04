@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import {ListView, Text, StyleSheet,
   TouchableOpacity, AlertIOS,View,
   AsyncStorage, TextInput } from 'react-native'
-import TodoDetail from './todoDetail'
 import TodoEdit from './todoedit'
+import CheckBox from 'react-native-checkbox';
 export default class ListTodo extends Component {
   constructor(props){
     super(props);
@@ -23,7 +23,7 @@ export default class ListTodo extends Component {
   save = async()=>{
     try {
       await AsyncStorage.setItem('@Array:key', JSON.stringify(this.state.mang));
-
+      console.log('SAVE!');
     } catch (e) {
       console.log(e);
     }
@@ -33,6 +33,7 @@ export default class ListTodo extends Component {
     try {
       var mang = await AsyncStorage.getItem('@Array:key');
       mang = JSON.parse(mang);
+      console.log(mang);
       this.setState({
         mang: mang,
         dataSource: this.state.dataSource.cloneWithRows(mang)
@@ -62,7 +63,7 @@ export default class ListTodo extends Component {
           onChangeText={ (text) => this.setState({ text: text }) }
         />
         <TouchableOpacity onPress={ () => { this.addCell() }}>
-          <Text> ADD </Text>
+          <Text style={{ marginTop: 5 }}> ADD </Text>
         </TouchableOpacity>
       </View>
     )
@@ -83,15 +84,6 @@ export default class ListTodo extends Component {
     this.save()
   }
 }
-
-  pressCell(dataRow, index){
-    this.props.navigator.push({
-      component: TodoDetail,
-      passProps: { dataRow, index },
-      title: 'Todo Detail',
-    })
-  }
-
   todoEdit(dataRow,index){
     this.props.navigator.push({
       component: TodoEdit,
@@ -111,17 +103,40 @@ export default class ListTodo extends Component {
       this.get()
   }
 
+  changeChecked(dataRow, rowID, checked){
+    console.log(this.state.mang);
+    console.log(checked);
+    console.log(dataRow[1]);
+    if (checked!=dataRow[1]) {
+      var current = ''
+      if (dataRow[1]=='true'){
+        current = 'false'
+      }
+      else {
+          current = 'true'
+      }
+      console.log(dataRow[0]+ '=='+ current);
+      array = this.state.mang
+      array[rowID] = [dataRow[0], current];
+      this.setState({ mang: array });
+      console.log(this.state.mang);
+      this.save()
+    }
+  }
+
   renderRow = (dataRow, sectionID, rowID) => {
     return (
       <View style={ styles.dataRow } >
-        <TouchableOpacity onPress={ () => {_this.pressCell(dataRow, rowID)} }>
-          <Text>{ dataRow[0] }</Text>
-        </TouchableOpacity>
+        <CheckBox
+          label={ dataRow[0] }
+          checked={ dataRow[1]=='true' }
+          onChange={ (checked) => { _this.changeChecked(dataRow, rowID, checked) } }
+        />
         <TouchableOpacity onPress={ () => {_this.todoEdit(dataRow, rowID)} }>
-          <Text>->Edit</Text>
+          <Text style={ styles.rowEdit } >Edit</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={ () => {_this.deleteCell(rowID)} } style = { styles.close }>
-          <Text>X</Text>
+          <Text style={ styles.rowIndex } >X</Text>
         </TouchableOpacity>
       </View>
     )
@@ -135,12 +150,25 @@ const styles = StyleSheet.create({
     backgroundColor: '#C1C1C1',
   },
   dataRow: {
-    flex: 1/2,
+    marginLeft: 10,
+    marginRight: 10,
+    marginTop: 5,
+    flex: 1,
+    justifyContent: 'space-between',
     flexDirection: 'row',
+    alignItems: 'center',
+  },
+  rowTitle: {
+    fontSize: 18,
+  },
+  rowEdit: {
+  },
+  rowIndex: {
+    color: 'red',
   },
   close: {
-    flex: 1/2,
-    alignItems: 'center',
+    // flex: 1/2,
+    // alignItems: 'center',
   },
   input: {
     height: 30,
