@@ -10,7 +10,7 @@ export default class ListTodo extends Component {
     var mang = []
     var ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 != r2 });
     this.state = {
-      text: 'Foxzi',
+      text: 'New todo',
       mang: mang,
       dataSource: ds.cloneWithRows(mang)
     };
@@ -33,7 +33,6 @@ export default class ListTodo extends Component {
     try {
       var mang = await AsyncStorage.getItem('@Array:key');
       mang = JSON.parse(mang);
-      console.log(mang);
       this.setState({
         mang: mang,
         dataSource: this.state.dataSource.cloneWithRows(mang)
@@ -63,7 +62,7 @@ export default class ListTodo extends Component {
           onChangeText={ (text) => this.setState({ text: text }) }
         />
         <TouchableOpacity onPress={ () => { this.addCell() }}>
-          <Text style={{ marginTop: 5 }}> ADD </Text>
+          <Text style={{ marginTop: '20%' }}> ADD </Text>
         </TouchableOpacity>
       </View>
     )
@@ -104,9 +103,6 @@ export default class ListTodo extends Component {
   }
 
   changeChecked(dataRow, rowID, checked){
-    console.log(this.state.mang);
-    console.log(checked);
-    console.log(dataRow[1]);
     if (checked!=dataRow[1]) {
       var current = ''
       if (dataRow[1]=='true'){
@@ -115,11 +111,8 @@ export default class ListTodo extends Component {
       else {
           current = 'true'
       }
-      console.log(dataRow[0]+ '=='+ current);
       array = this.state.mang
       array[rowID] = [dataRow[0], current];
-      this.setState({ mang: array });
-      console.log(this.state.mang);
       this.save()
     }
   }
@@ -132,11 +125,17 @@ export default class ListTodo extends Component {
           checked={ dataRow[1]=='true' }
           onChange={ (checked) => { _this.changeChecked(dataRow, rowID, checked) } }
         />
-        <TouchableOpacity onPress={ () => {_this.todoEdit(dataRow, rowID)} }>
-          <Text style={ styles.rowEdit } >Edit</Text>
+
+        <TouchableOpacity
+          style={ styles.rowEdit }
+          onPress={ () => {_this.todoEdit(dataRow, rowID)} }  >
+          <Text>Edit</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={ () => {_this.deleteCell(rowID)} } style = { styles.close }>
-          <Text style={ styles.rowIndex } >X</Text>
+
+        <TouchableOpacity
+          style={ styles.rowIndex }
+          onPress={ () => {_this.deleteCell(rowID)} } >
+          <Text style={ styles.rowColor } >X</Text>
         </TouchableOpacity>
       </View>
     )
@@ -153,22 +152,21 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     marginRight: 10,
     marginTop: 5,
-    flex: 1,
-    justifyContent: 'space-between',
+    flex:1,
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  rowTitle: {
-    fontSize: 18,
+    position: 'relative',
   },
   rowEdit: {
+    position: 'absolute',
+    right: '10%',
   },
   rowIndex: {
-    color: 'red',
+    position: 'absolute',
+    right: 0,
   },
-  close: {
-    // flex: 1/2,
-    // alignItems: 'center',
+  rowColor: {
+    color: 'red',
   },
   input: {
     height: 30,
