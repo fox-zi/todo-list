@@ -10,7 +10,7 @@ export default class ListTodo extends Component {
     var mang = []
     var ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 != r2 });
     this.state = {
-      text: 'New todo',
+      text: 'Foxzi',
       mang: mang,
       dataSource: ds.cloneWithRows(mang)
     };
@@ -33,12 +33,13 @@ export default class ListTodo extends Component {
     try {
       var mang = await AsyncStorage.getItem('@Array:key');
       mang = JSON.parse(mang);
+      console.log('GET!');
       this.setState({
         mang: mang,
         dataSource: this.state.dataSource.cloneWithRows(mang)
       })
     } catch (e) {
-      console.log('==============Lôi');
+      console.log(e);
     }
   }
   render() {
@@ -103,6 +104,7 @@ export default class ListTodo extends Component {
   }
 
   changeChecked(dataRow, rowID, checked){
+
     if (checked!=dataRow[1]) {
       var current = ''
       if (dataRow[1]=='true'){
@@ -113,6 +115,7 @@ export default class ListTodo extends Component {
       }
       array = this.state.mang
       array[rowID] = [dataRow[0], current];
+      this.setState({ mang: array });
       this.save()
     }
   }
