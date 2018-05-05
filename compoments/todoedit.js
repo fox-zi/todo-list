@@ -10,7 +10,6 @@ export default class TodoEdit extends Component {
     };
   }
   componentDidMount(){
-    _this = this;
     this.get()
   }
   render() {

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import {ListView, Text, StyleSheet,
-  TouchableOpacity, AlertIOS,View,
+import { ListView, Text, StyleSheet,
+  TouchableOpacity,View,
   AsyncStorage, TextInput } from 'react-native'
 import TodoEdit from './todoedit'
 import CheckBox from 'react-native-checkbox';
@@ -16,7 +16,6 @@ export default class ListTodo extends Component {
     };
   }
   componentDidMount(){
-    _this = this;
     this.get()
   }
 
@@ -126,18 +125,18 @@ export default class ListTodo extends Component {
         <CheckBox
           label={ dataRow[0] }
           checked={ dataRow[1]=='true' }
-          onChange={ (checked) => { _this.changeChecked(dataRow, rowID, checked) } }
+          onChange={ (checked) => { this.changeChecked(dataRow, rowID, checked) } }
         />
 
         <TouchableOpacity
           style={ styles.rowEdit }
-          onPress={ () => {_this.todoEdit(dataRow, rowID)} }  >
+          onPress={ () => { this.todoEdit(dataRow, rowID) } }  >
           <Text>Edit</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={ styles.rowIndex }
-          onPress={ () => {_this.deleteCell(rowID)} } >
+          onPress={ () => { this.deleteCell(rowID) } } >
           <Text style={ styles.rowColor } >X</Text>
         </TouchableOpacity>
       </View>
