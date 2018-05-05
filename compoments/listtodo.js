@@ -23,6 +23,7 @@ export default class ListTodo extends Component {
     try {
       await AsyncStorage.setItem('@Array:key', JSON.stringify(this.state.mang));
       console.log('SAVE!');
+      this.get()
     } catch (e) {
       console.log(e);
     }
@@ -99,7 +100,6 @@ export default class ListTodo extends Component {
         dataSource: this.state.dataSource.cloneWithRows(this.state.mang)
       })
       this.save()
-      this.get()
   }
 
   changeChecked(dataRow, rowID, checked){
