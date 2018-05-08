@@ -4,15 +4,16 @@ import { ListView, Text, StyleSheet,
   AsyncStorage, TextInput } from 'react-native'
 import TodoEdit from './todoedit'
 import CheckBox from 'react-native-checkbox';
-export default class ListTodo extends Component {
+import { connect } from 'react-redux';
+
+class ListTodo extends Component {
   constructor(props){
     super(props);
-    var mang = []
     var ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 != r2 });
     this.state = {
-      text: 'Foxzi',
-      mang: mang,
-      dataSource: ds.cloneWithRows(mang)
+      text: this.props.myName,
+      mang: this.props.data,
+      dataSource: ds.cloneWithRows(this.props.data)
     };
   }
   componentDidMount(){
@@ -33,7 +34,6 @@ export default class ListTodo extends Component {
     try {
       var mang = await AsyncStorage.getItem('@Array:key');
       mang = JSON.parse(mang);
-      console.log('GET!');
       this.setState({
         mang: mang,
         dataSource: this.state.dataSource.cloneWithRows(mang)
@@ -143,6 +143,17 @@ export default class ListTodo extends Component {
     )
   }
 }
+
+
+function mapStateToProps(state){
+  return {
+    myName: state.name,
+    data: state.mang
+  };
+}
+
+export default connect(mapStateToProps)(ListTodo);
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
