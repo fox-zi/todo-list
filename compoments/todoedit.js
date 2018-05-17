@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import {View, TextInput, StyleSheet, TouchableOpacity, Text, AsyncStorage } from 'react-native'
 import ListTodo from './listtodo'
-export default class TodoEdit extends Component {
+import { connect } from 'react-redux';
+class TodoEdit extends Component {
   constructor(props){
     super(props);
     this.state = {
@@ -9,9 +10,9 @@ export default class TodoEdit extends Component {
       mang: []
     };
   }
-  componentDidMount(){
-    this.get()
-  }
+  // componentDidMount(){
+  //   this.get()
+  // }
   render() {
       return(
         <View style={ styles1.container }>
@@ -26,37 +27,41 @@ export default class TodoEdit extends Component {
         </View>
       )
     }
-    get = async()=>{
-      try {
-        var mang = await AsyncStorage.getItem('@Array:key');
-        mang = JSON.parse(mang);
-        this.setState({
-          mang: mang
-        })
-      } catch (e) {
-        console.log(e);
-      }
-    }
-
-    save = async()=>{
-        try {
-          await AsyncStorage.setItem('@Array:key', JSON.stringify(this.state.mang));
-          console.log('SAVE');
-        } catch (e) {
-          console.log(e);
-        }
-      }
+    // get = async()=>{
+    //   try {
+    //     var mang = await AsyncStorage.getItem('@Array:key');
+    //     mang = JSON.parse(mang);
+    //     this.setState({
+    //       mang: mang
+    //     })
+    //   } catch (e) {
+    //     console.log(e);
+    //   }
+    // }
+    //
+    // save = async()=>{
+    //     try {
+    //       await AsyncStorage.setItem('@Array:key', JSON.stringify(this.state.mang));
+    //       console.log('SAVE');
+    //     } catch (e) {
+    //       console.log(e);
+    //     }
+    //   }
     todoEdit(){
-      var mang = this.state.mang
-      mang[this.props.index] = [this.state.text, this.props.dataRow[1]]
-      this.setState({ mang: mang })
-      this.save()
+      this.props.dispatch({type: 'EDIT_DATA', index: this.props.index, value: this.state.text, status: this.props.dataRow[1] })
+      // var mang = this.state.mang
+      // mang[this.props.index] = [this.state.text, this.props.dataRow[1]]
+      // this.setState({ mang: mang })
+      // this.save()
       this.props.navigator.push({
         component: ListTodo,
         title: 'My todo',
       })
     }
 }
+
+export default connect()(TodoEdit);
+
 const styles1 = StyleSheet.create({
   container: {
     flex: 1,

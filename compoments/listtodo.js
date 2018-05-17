@@ -17,31 +17,32 @@ class ListTodo extends Component {
     };
   }
   componentDidMount(){
-    this.get()
+    self = this
+    // this.get()
   }
 
-  save = async()=>{
-    try {
-      await AsyncStorage.setItem('@Array:key', JSON.stringify(this.state.mang));
-      console.log('SAVE!');
-      this.get()
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
-  get = async()=>{
-    try {
-      var mang = await AsyncStorage.getItem('@Array:key');
-      mang = JSON.parse(mang);
-      this.setState({
-        mang: mang,
-        dataSource: this.state.dataSource.cloneWithRows(mang)
-      })
-    } catch (e) {
-      console.log(e);
-    }
-  }
+  // save = async()=>{
+  //   try {
+  //     await AsyncStorage.setItem('@Array:key', JSON.stringify(this.state.mang));
+  //     console.log('SAVE!');
+  //     this.get()
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // }
+  //
+  // get = async()=>{
+  //   try {
+  //     var mang = await AsyncStorage.getItem('@Array:key');
+  //     mang = JSON.parse(mang);
+  //     this.setState({
+  //       mang: mang,
+  //       dataSource: this.state.dataSource.cloneWithRows(mang)
+  //     })
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // }
   render() {
     return(
         <ListView
@@ -70,19 +71,23 @@ class ListTodo extends Component {
   }
 
   addCell() {
-    if (this.state.text) {
-      array = this.state.mang;
-      arr = [];
-      arr.push(this.state.text);
-      arr.push('false')
-      array.push(arr)
-      this.setState({
-        mang: array,
-        text: '',
-        dataSource: this.state.dataSource.cloneWithRows(array)
-      });
-    this.save()
-  }
+    this.props.dispatch({type: 'ADD_DATA', text: this.state.text })
+    // this.setState({
+    //   dataSource: this.state.dataSource.cloneWithRows(self.props.data)
+    // });
+  //   if (this.state.text) {
+  //     array = this.state.mang;
+  //     arr = [];
+  //     arr.push(this.state.text);
+  //     arr.push('false')
+  //     array.push(arr)
+  //     this.setState({
+  //       mang: array,
+  //       text: '',
+  //       dataSource: this.state.dataSource.cloneWithRows(array)
+  //     });
+  //   this.save()
+  // }
 }
   todoEdit(dataRow,index){
     this.props.navigator.push({
@@ -93,13 +98,13 @@ class ListTodo extends Component {
   }
 
   deleteCell(index){
-      array = this.state.mang;
-      array.splice(index,1)
-      this.setState({
-        mang: array,
-        dataSource: this.state.dataSource.cloneWithRows(this.state.mang)
-      })
-      this.save()
+      this.props.dispatch({type: 'DELETE_DATA', index: index })
+      // array = this.state.mang;
+      // array.splice(index,1)
+      // this.setState({
+      //   dataSource: this.state.dataSource.cloneWithRows(self.state.mang)
+      // })
+      // this.save()
   }
 
   changeChecked(dataRow, rowID, checked){
@@ -112,10 +117,11 @@ class ListTodo extends Component {
       else {
           current = 'true'
       }
-      array = this.state.mang
-      array[rowID] = [dataRow[0], current];
-      this.setState({ mang: array });
-      this.save()
+      this.props.dispatch({type: 'CHECKED', index: rowID, value: dataRow[0], status: current })
+      // array = this.state.mang
+      // array[rowID] = [dataRow[0], current];
+      // this.setState({ mang: array });
+      // this.save()
     }
   }
 
@@ -145,7 +151,8 @@ class ListTodo extends Component {
 }
 
 
-function mapStateToProps(state){
+const mapStateToProps = (state) => {
+  console.log(state.mang);
   return {
     myName: state.name,
     data: state.mang

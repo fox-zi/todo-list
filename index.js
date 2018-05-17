@@ -8,14 +8,32 @@ import { AsyncStorage } from 'react-native';
 const defaultState = {
   name: 'fox zi',
   value: 0,
-  mang: []
+  mang: [['qui lam','true']]
 }
 
 const reducer = (state = defaultState, action) => {
-  if (action.type === 'GET_DATA')
-    return { mang: state.mang }
-  if (action.type === 'SAVE_DATA')
-    return { mang: state.mang }
+  if (action.type === 'ADD_DATA')
+    return {
+      mang: [
+        ...state.mang,
+        [action.text,'false']
+      ]
+    }
+
+  if (action.type === 'DELETE_DATA'){
+    state.mang.splice(action.index, 1)
+    return { ...state }
+  }
+
+  if (action.type === 'EDIT_DATA'){
+    state.mang[action.index] = [action.value, action.status];
+    return { ...state }
+  }
+
+  if (action.type === 'CHECKED'){
+    state.mang[action.index] = [action.value, action.status];
+    return { ...state }
+  }
   return state;
 }
 
