@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { ListView, Text, StyleSheet,
   TouchableOpacity,View,
-  AsyncStorage, TextInput } from 'react-native'
+    AsyncStorage, TextInput } from 'react-native'
 import TodoEdit from './todoedit'
 import CheckBox from 'react-native-checkbox';
 import { connect } from 'react-redux';
@@ -17,8 +17,12 @@ class ListTodo extends Component {
     };
   }
   componentDidMount(){
+    setInterval(() => {
+            this.setState({
+                mang: this.props.data,
+                dataSource: this.state.dataSource.cloneWithRows(this.props.data) });
+        }, 10);
     self = this
-    // this.get()
   }
 
   // save = async()=>{
@@ -72,22 +76,7 @@ class ListTodo extends Component {
 
   addCell() {
     this.props.dispatch({type: 'ADD_DATA', text: this.state.text })
-    // this.setState({
-    //   dataSource: this.state.dataSource.cloneWithRows(self.props.data)
-    // });
-  //   if (this.state.text) {
-  //     array = this.state.mang;
-  //     arr = [];
-  //     arr.push(this.state.text);
-  //     arr.push('false')
-  //     array.push(arr)
-  //     this.setState({
-  //       mang: array,
-  //       text: '',
-  //       dataSource: this.state.dataSource.cloneWithRows(array)
-  //     });
-  //   this.save()
-  // }
+
 }
   todoEdit(dataRow,index){
     this.props.navigator.push({
@@ -99,16 +88,9 @@ class ListTodo extends Component {
 
   deleteCell(index){
       this.props.dispatch({type: 'DELETE_DATA', index: index })
-      // array = this.state.mang;
-      // array.splice(index,1)
-      // this.setState({
-      //   dataSource: this.state.dataSource.cloneWithRows(self.state.mang)
-      // })
-      // this.save()
   }
 
   changeChecked(dataRow, rowID, checked){
-
     if (checked!=dataRow[1]) {
       var current = ''
       if (dataRow[1]=='true'){
@@ -117,11 +99,9 @@ class ListTodo extends Component {
       else {
           current = 'true'
       }
+      mang = self.props.data
+      mang[rowID] = [dataRow[0], current]
       this.props.dispatch({type: 'CHECKED', index: rowID, value: dataRow[0], status: current })
-      // array = this.state.mang
-      // array[rowID] = [dataRow[0], current];
-      // this.setState({ mang: array });
-      // this.save()
     }
   }
 
@@ -152,7 +132,6 @@ class ListTodo extends Component {
 
 
 const mapStateToProps = (state) => {
-  console.log(state.mang);
   return {
     myName: state.name,
     data: state.mang
@@ -171,7 +150,7 @@ const styles = StyleSheet.create({
   dataRow: {
     marginLeft: 10,
     marginRight: 10,
-    marginTop: 5,
+    marginTop: 20,
     flex:1,
     flexDirection: 'row',
     alignItems: 'center',

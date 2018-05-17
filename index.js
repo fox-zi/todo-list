@@ -1,40 +1,43 @@
-import { AppRegistry } from 'react-native';
+import { AppRegistry, AppState, AsyncStorage, Text } from 'react-native';
 import App from './App';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import React, { Component } from 'react';
-import { AsyncStorage } from 'react-native';
 
 const defaultState = {
   name: 'fox zi',
   value: 0,
-  mang: [['qui lam','true']]
+  mang: [],
 }
 
 const reducer = (state = defaultState, action) => {
-  if (action.type === 'ADD_DATA')
-    return {
-      mang: [
-        ...state.mang,
-        [action.text,'false']
-      ]
-    }
+  switch (action.type) {
+    case 'ADD_DATA':
+      return {
+        mang: [
+          ...state.mang,
+          [action.text, 'false']
+        ]
+      }
+    case 'DELETE_DATA':
+      state.mang.splice(action.index, 1)
+      return { ...state }
 
-  if (action.type === 'DELETE_DATA'){
-    state.mang.splice(action.index, 1)
-    return { ...state }
+    case 'EDIT_DATA':
+      state.mang[action.index] = [action.value, action.status];
+      return state
+
+    case 'CHECKED':
+      state.mang[action.index] = [action.value, action.status];
+      return state
+
+    case 'GET_DATA':
+      state.mang = action.data
+      return state
+    default:
+      return state
   }
 
-  if (action.type === 'EDIT_DATA'){
-    state.mang[action.index] = [action.value, action.status];
-    return { ...state }
-  }
-
-  if (action.type === 'CHECKED'){
-    state.mang[action.index] = [action.value, action.status];
-    return { ...state }
-  }
-  return state;
 }
 
 const store = createStore(reducer);
