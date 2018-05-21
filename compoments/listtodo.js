@@ -12,49 +12,19 @@ class ListTodo extends Component {
     var ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 != r2 });
     this.state = {
       text: this.props.myName,
-      mang: this.props.data,
-      dataSource: ds.cloneWithRows(this.props.data)
     };
   }
-  componentDidMount(){
-    setInterval(() => {
-            this.setState({
-                mang: this.props.data,
-                dataSource: this.state.dataSource.cloneWithRows(this.props.data) });
-        }, 10);
-    self = this
-  }
-
-  // save = async()=>{
-  //   try {
-  //     await AsyncStorage.setItem('@Array:key', JSON.stringify(this.state.mang));
-  //     console.log('SAVE!');
-  //     this.get()
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // }
-  //
-  // get = async()=>{
-  //   try {
-  //     var mang = await AsyncStorage.getItem('@Array:key');
-  //     mang = JSON.parse(mang);
-  //     this.setState({
-  //       mang: mang,
-  //       dataSource: this.state.dataSource.cloneWithRows(mang)
-  //     })
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // }
   render() {
+    console.log("---Render---");
+    console.log(this.props.dataSource);
     return(
         <ListView
           enableEmptySections = { true }
-          dataSource = { this.state.dataSource }
+          dataSource = { this.props.dataSource }
           renderRow= { this.renderRow.bind(this) }
           renderHeader = { this.renderAdd.bind(this) }
-        />
+        >
+        </ListView>
     )
   }
 
@@ -62,7 +32,7 @@ class ListTodo extends Component {
     return (
       <View style={ styles.container }>
         <TextInput
-          value = { this.state.text }
+          value = { this.props.myName }
           style={ styles.input }
           placeholder="Search..."
           onChangeText={ (text) => this.setState({ text: text }) }
@@ -76,8 +46,7 @@ class ListTodo extends Component {
 
   addCell() {
     this.props.dispatch({type: 'ADD_DATA', text: this.state.text })
-
-}
+  }
   todoEdit(dataRow,index){
     this.props.navigator.push({
       component: TodoEdit,
@@ -99,7 +68,7 @@ class ListTodo extends Component {
       else {
           current = 'true'
       }
-      mang = self.props.data
+      mang = this.props.data
       mang[rowID] = [dataRow[0], current]
       this.props.dispatch({type: 'CHECKED', index: rowID, value: dataRow[0], status: current })
     }
@@ -134,7 +103,8 @@ class ListTodo extends Component {
 const mapStateToProps = (state) => {
   return {
     myName: state.name,
-    data: state.mang
+    data: state.mang,
+    dataSource: state.dataSource.cloneWithRows(state.mang)
   };
 }
 
