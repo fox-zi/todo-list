@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { ListView, Text, StyleSheet,
   TouchableOpacity,View,
-    AsyncStorage, TextInput } from 'react-native'
+  TextInput } from 'react-native'
 import TodoEdit from './todoedit'
 import CheckBox from 'react-native-checkbox';
 import { connect } from 'react-redux';
@@ -15,8 +15,6 @@ class ListTodo extends Component {
     };
   }
   render() {
-    console.log("---Render---");
-    console.log(this.props.dataSource);
     return(
         <ListView
           enableEmptySections = { true }
@@ -40,6 +38,9 @@ class ListTodo extends Component {
         <TouchableOpacity onPress={ () => { this.addCell() }}>
           <Text style={{ marginTop: '20%' }}> ADD </Text>
         </TouchableOpacity>
+        <TouchableOpacity onPress={ () => { this.getData() }}>
+          <Text style={{ marginTop: '20%' }}> GET </Text>
+        </TouchableOpacity>
       </View>
     )
   }
@@ -47,6 +48,11 @@ class ListTodo extends Component {
   addCell() {
     this.props.dispatch({type: 'ADD_DATA', text: this.state.text })
   }
+
+  getData() {
+    this.props.dispatch({ type: 'GET' })
+  }
+
   todoEdit(dataRow,index){
     this.props.navigator.push({
       component: TodoEdit,
@@ -68,8 +74,6 @@ class ListTodo extends Component {
       else {
           current = 'true'
       }
-      mang = this.props.data
-      mang[rowID] = [dataRow[0], current]
       this.props.dispatch({type: 'CHECKED', index: rowID, value: dataRow[0], status: current })
     }
   }

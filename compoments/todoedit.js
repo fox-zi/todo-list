@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {View, TextInput, StyleSheet, TouchableOpacity, Text, AsyncStorage } from 'react-native'
+import {View, TextInput, StyleSheet, TouchableOpacity, Text } from 'react-native'
 import ListTodo from './listtodo'
 import { connect } from 'react-redux';
 class TodoEdit extends Component {
@@ -24,26 +24,6 @@ class TodoEdit extends Component {
         </View>
       )
     }
-    // get = async()=>{
-    //   try {
-    //     var mang = await AsyncStorage.getItem('@Array:key');
-    //     mang = JSON.parse(mang);
-    //     this.setState({
-    //       mang: mang
-    //     })
-    //   } catch (e) {
-    //     console.log(e);
-    //   }
-    // }
-    //
-    // save = async()=>{
-    //     try {
-    //       await AsyncStorage.setItem('@Array:key', JSON.stringify(this.state.mang));
-    //       console.log('SAVE');
-    //     } catch (e) {
-    //       console.log(e);
-    //     }
-    //   }
     todoEdit(){
       this.props.dispatch({type: 'EDIT_DATA', index: this.props.index, value: this.state.text, status: this.props.dataRow[1] })
       this.props.navigator.push({
