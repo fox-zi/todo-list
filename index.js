@@ -5,60 +5,62 @@ import { Provider } from 'react-redux';
 import React, { Component } from 'react';
 
 var ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => (r1[0] == r2[0]) });
-var mang = [['acb','true']
-]
+var mang = [[]]
 var defaultState = {
-  name: 'fox zi',
+  name: '',
   mang: mang,
   dataSource: ds.cloneWithRows(mang)
 }
 
 var reducer = (state = defaultState, action) => {
   let newState = Object.assign({}, state);
-  let array = newState.mang
+  newState.name = ''
   switch (action.type) {
     case 'ADD_DATA':
-      array.push([action.text, 'false'])
-      AsyncStorage.setItem('@Array:key', JSON.stringify(array));
+      newState.mang.push([action.text, 'false'])
+      Save(newState.mang)
       return {
-        mang: array,
-        dataSource: state.dataSource.cloneWithRows(array)
+        mang: newState.mang,
+        dataSource: state.dataSource.cloneWithRows(newState.mang)
       }
     case 'DELETE_DATA':
       newState.mang.splice(action.index, 1);
-      AsyncStorage.setItem('@Array:key', JSON.stringify(newState.mang));
+      Save(newState.mang)
       return {
         mang: newState.mang,
         dataSource: newState.dataSource.cloneWithRows(newState.mang)
       }
 
     case 'EDIT_DATA':
-      array[action.index] = [action.value, action.status];
-      AsyncStorage.setItem('@Array:key', JSON.stringify(array));
+      newState.mang[action.index] = [action.value, action.status];
+      Save(newState.mang)
       return {
-        mang: array,
-        dataSource: newState.dataSource.cloneWithRows(array)
+        mang: newState.mang,
+        dataSource: newState.dataSource.cloneWithRows(newState.mang)
       };
 
     case 'CHECKED':
-      console.log(action);
-      array[action.index] = [action.value, action.status];
-      AsyncStorage.setItem('@Array:key', JSON.stringify(array));
+      newState.mang[action.index] = [action.value, action.status];
+      Save(newState.mang)
       return {
-        mang: array,
-        dataSource: newState.dataSource.cloneWithRows(array)
+        mang: newState.mang,
+        dataSource: newState.dataSource.cloneWithRows(newState.mang)
       };
     default:
       return state
   }
 }
 
+function Save(array){
+  AsyncStorage.setItem('@Array:key', JSON.stringify(array));
+}
+
+var store = createStore(reducer)
 export default class DemoRedux extends Component {
   constructor(props) {
     super(props);
     this.state = {
       isStoreLoading: false,
-      store: createStore(reducer)
     }
   }
 
@@ -66,15 +68,14 @@ export default class DemoRedux extends Component {
     var self = this;
     this.setState({ isStoreLoading: true });
     AsyncStorage.getItem('@Array:key').then((value) => {
-      console.log(value);
       if (value && value.length) {
         let array = JSON.parse(value);
         defaultState = {
-          name: 'fox zi 2',
+          name: 'fox zi',
           mang: array,
           dataSource: ds.cloneWithRows(array)
         }
-        self.setState({ store: createStore(reducer) });
+        store = createStore(reducer);
       }
       self.setState({ isStoreLoading: false });
     }).catch((error) => {
@@ -85,7 +86,7 @@ export default class DemoRedux extends Component {
   render() {
     if (this.state.isStoreLoading) return <Text>Loading notes ...</Text>
     return (
-      <Provider store={createStore(reducer)}>
+      <Provider store={ store }>
         <App/>
       </Provider>
     )
