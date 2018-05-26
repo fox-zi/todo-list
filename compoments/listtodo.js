@@ -5,6 +5,7 @@ import { ListView, Text, StyleSheet,
 import TodoEdit from './todoedit'
 import CheckBox from 'react-native-checkbox';
 import { connect } from 'react-redux';
+var ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => (r1[0] == r2[0]) });
 
 class ListTodo extends Component {
   constructor(props){
@@ -38,19 +39,12 @@ class ListTodo extends Component {
         <TouchableOpacity onPress={ () => { this.addCell() }}>
           <Text style={{ marginTop: '20%' }}> ADD </Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={ () => { this.getData() }}>
-          <Text style={{ marginTop: '20%' }}> GET </Text>
-        </TouchableOpacity>
       </View>
     )
   }
 
   addCell() {
     this.props.dispatch({type: 'ADD_DATA', text: this.state.text })
-  }
-
-  getData() {
-    this.props.dispatch({ type: 'GET' })
   }
 
   todoEdit(dataRow,index){
@@ -108,7 +102,7 @@ const mapStateToProps = (state) => {
   return {
     myName: state.name,
     data: state.mang,
-    dataSource: state.dataSource.cloneWithRows(state.mang)
+    dataSource: ds.cloneWithRows(state.mang)
   };
 }
 

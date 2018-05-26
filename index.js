@@ -1,15 +1,12 @@
-import { AppRegistry, AppState, AsyncStorage, Text, ListView } from 'react-native';
+import { AppRegistry, AppState, AsyncStorage, Text } from 'react-native';
 import App from './App';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import React, { Component } from 'react';
 
-var ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => (r1[0] == r2[0]) });
-var mang = [[]]
 var defaultState = {
   name: '',
-  mang: mang,
-  dataSource: ds.cloneWithRows(mang)
+  mang: [[]],
 }
 
 var reducer = (state = defaultState, action) => {
@@ -21,14 +18,12 @@ var reducer = (state = defaultState, action) => {
       Save(newState.mang)
       return {
         mang: newState.mang,
-        dataSource: state.dataSource.cloneWithRows(newState.mang)
       }
     case 'DELETE_DATA':
       newState.mang.splice(action.index, 1);
       Save(newState.mang)
       return {
         mang: newState.mang,
-        dataSource: newState.dataSource.cloneWithRows(newState.mang)
       }
 
     case 'EDIT_DATA':
@@ -36,7 +31,6 @@ var reducer = (state = defaultState, action) => {
       Save(newState.mang)
       return {
         mang: newState.mang,
-        dataSource: newState.dataSource.cloneWithRows(newState.mang)
       };
 
     case 'CHECKED':
@@ -44,7 +38,6 @@ var reducer = (state = defaultState, action) => {
       Save(newState.mang)
       return {
         mang: newState.mang,
-        dataSource: newState.dataSource.cloneWithRows(newState.mang)
       };
     default:
       return state
@@ -72,8 +65,7 @@ export default class DemoRedux extends Component {
         let array = JSON.parse(value);
         defaultState = {
           name: 'fox zi',
-          mang: array,
-          dataSource: ds.cloneWithRows(array)
+          mang: array
         }
         store = createStore(reducer);
       }
